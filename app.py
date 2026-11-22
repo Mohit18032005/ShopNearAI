@@ -1,9 +1,9 @@
-import sqlite3
+import psycopg
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from database import get_connection, initialize_database
+from database_postgres import get_connection, initialize_database
 from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
@@ -1759,7 +1759,7 @@ def add_category():
         connection.commit()
         flash("Category added successfully.")
 
-    except sqlite3.IntegrityError:
+    except psycopg.IntegrityError:
         flash("This category already exists.")
 
     finally:
@@ -1812,7 +1812,7 @@ def edit_category(category_id):
         connection.commit()
         flash("Category updated successfully.")
 
-    except sqlite3.IntegrityError:
+    except psycopg.IntegrityError:
         connection.rollback()
         flash("This category name already exists.")
 
@@ -2252,6 +2252,7 @@ def update_bargaining_offer(offer_id):
             WHERE bargaining_requests.id = ?
               AND bargaining_requests.shopkeeper_id = ?
               AND bargaining_requests.status = 'Pending'
+              FOR UPDATE OF bargaining_requests, products
         """, (offer_id, session["user_id"]))
 
         offer = cursor.fetchone()
@@ -2376,7 +2377,7 @@ def respond_to_counteroffer(offer_id):
     cursor = connection.cursor()
 
     try:
-        cursor.execute("BEGIN IMMEDIATE")
+        cursor.execute("BEGIN")
 
         cursor.execute("""
             SELECT
@@ -2394,6 +2395,7 @@ def respond_to_counteroffer(offer_id):
                 ON bargaining_requests.product_id = products.id
             WHERE bargaining_requests.id = ?
               AND bargaining_requests.customer_id = ?
+              FOR UPDATE OF bargaining_requests, products
         """, (offer_id, session["user_id"]))
 
         offer = cursor.fetchone()
@@ -2536,4 +2538,4 @@ def submit_counteroffer(offer_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.environ.get("FLASK_DEBUG", "0") == "1")
