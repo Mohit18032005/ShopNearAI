@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Management | ShopNear AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="admin-page">
+
+    <div class="admin-layout">
+
+        <aside class="admin-sidebar">
+            <h2>ShopNear AI</h2>
+
+            <p class="sidebar-label">ADMINISTRATION</p>
+
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('admin_customers') }}">Customers</a>
+            <a href="{{ url_for('admin_shopkeepers') }}">Shopkeepers</a>
+            <a href="{{ url_for('admin_shops') }}">Shops</a>
+            <a href="{{ url_for('admin_products') }}">Products</a>
+            <a href="{{ url_for('admin_reservations') }}" class="active">Reservations</a>
+
+            <a href="{{ url_for('admin_dashboard') }}#categories">Categories</a>
+            <a href="{{ url_for('admin_dashboard') }}#analytics">Analytics</a>
+            <a href="{{ url_for('admin_dashboard') }}#settings">Settings</a>
+
+            <div class="sidebar-bottom">
+                <a href="{{ url_for('home') }}">View Marketplace</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+
+            <header class="admin-topbar">
+                <div>
+                    <h1>Reservation Management</h1>
+                    <p>View and manage customer reservations.</p>
+                </div>
+
+                <div class="admin-profile">
+                    <span>Administrator</span>
+                    <strong>{{ session.get('user_name') }}</strong>
+                </div>
+            </header>
+
+            <section class="admin-welcome">
+                <h2>Registered Reservations</h2>
+                <p>Manage all customer product reservations on ShopNear AI.</p>
+            </section>
+
+            <section class="admin-stats">
+                <div class="admin-stat-card">
+                    <span>Total Reservations</span>
+                    <h2>{{ total_reservations }}</h2>
+                    <p>Customer product reservations</p>
+                </div>
+            </section>
+
+            <section class="admin-management">
+
+                <h2>All Reservations</h2>
+                <p>List of customer reservations and their details.</p>
+
+<form method="GET"
+      action="{{ url_for('admin_reservations') }}"
+      class="admin-search-form">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by customer, email, product, shop, location or status..."
+        value="{{ search_query }}"
+    >
+
+    <button type="submit">Search</button>
+
+    {% if search_query %}
+        <a href="{{ url_for('admin_reservations') }}">Clear</a>
+    {% endif %}
+
+</form>
+
+
+                <div class="admin-table-container">
+                    <table class="admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Customer</th>
+                                <th>Email</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Shop</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for reservation in reservations %}
+                            <tr>
+                                <td>{{ reservation['id'] }}</td>
+                                <td>{{ reservation['customer_name'] or 'N/A' }}</td>
+                                <td>{{ reservation['customer_email'] or 'N/A' }}</td>
+                                <td>{{ reservation['product'] }}</td>
+                                <td>₹{{ reservation['price'] }}</td>
+                                <td>{{ reservation['shop'] }}</td>
+                                <td>{{ reservation['location'] }}</td>
+                                
+<td>
+    <form method="POST"
+          action="{{ url_for('update_reservation_status', reservation_id=reservation['id']) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <select name="status" required>
+            <option value="Confirmed"
+                {% if reservation['status'] == 'Confirmed' %}selected{% endif %}>
+                Confirmed
+            </option>
+
+            <option value="Cancelled"
+                {% if reservation['status'] == 'Cancelled' %}selected{% endif %}>
+                Cancelled
+            </option>
+        </select>
+
+        <button type="submit">Update</button>
+
+    </form>
+</td>
+
+                                <td>{{ reservation['date'] }}</td>
+                            </tr>
+
+                            {% else %}
+                            <tr>
+                                <td colspan="9">No reservations registered yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </section>
+
+            <footer class="admin-footer">
+                ShopNear AI Admin Panel
+            </footer>
+
+        </main>
+    </div>
+
+</body>
+</html>

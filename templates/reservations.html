@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reservations | ShopNear AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .history-container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 25px;
+        }
+
+        .history-container h1 {
+            color: #16834a;
+            margin-bottom: 10px;
+        }
+
+        .history-subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .reservation-card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .reservation-card h3 {
+            color: #16834a;
+            margin-top: 0;
+        }
+
+        .history-detail {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        .history-detail strong {
+            color: #334155;
+        }
+
+        .confirmed-status {
+            color: #16834a;
+            font-weight: bold;
+        }
+
+        .view-reservation {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 11px 20px;
+            background: #16834a;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .empty-history {
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .history-container {
+                margin: 25px 10px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="history-container">
+
+        <h1>My Reservations</h1>
+
+        <p class="history-subtitle">
+            View all the products you have reserved.
+        </p>
+
+        {% if reservations %}
+
+            {% for reservation in reservations %}
+
+                <div class="reservation-card">
+
+                    <h3>Reservation #{{ reservation.id }}</h3>
+
+                    <div class="history-detail">
+                        <strong>Product</strong>
+                        <span>{{ reservation.product }}</span>
+                    </div>
+
+                    <div class="history-detail">
+                        <strong>Price</strong>
+                        <span>₹{{ reservation.price | int }}</span>
+                    </div>
+
+                    <div class="history-detail">
+                        <strong>Shop</strong>
+                        <span>{{ reservation.shop }}</span>
+                    </div>
+
+                    <div class="history-detail">
+                        <strong>Location</strong>
+                        <span>{{ reservation.location }}</span>
+                    </div>
+
+                    <div class="history-detail">
+                        <strong>Status</strong>
+                        <span class="confirmed-status">
+                            {{ reservation.status }}
+                        </span>
+                    </div>
+
+                    <div class="history-detail">
+                        <strong>Date</strong>
+                        <span>{{ reservation.date }}</span>
+                    </div>
+
+                    <a class="view-reservation"
+                       href="{{ url_for('reservation_details',
+                       reservation_id=reservation.id) }}">
+                        View Details
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-history">
+                <h2>No Reservations Yet</h2>
+                <p>You haven't reserved any products.</p>
+                <a class="view-reservation"
+                   href="{{ url_for('home') }}">
+                    Explore Products
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

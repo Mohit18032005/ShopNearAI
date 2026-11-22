@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard | ShopNear AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="customer-page">
+
+    <header class="customer-header">
+        <a href="{{ url_for('home') }}" class="customer-logo">
+            ShopNear AI
+        </a>
+
+        <nav class="customer-nav">
+            <a href="{{ url_for('home') }}">Marketplace</a>
+            <a href="{{ url_for('my_reservations') }}">My Reservations</a>
+            <a href="{{ url_for('logout') }}" class="customer-logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="customer-dashboard">
+
+        <section class="customer-welcome">
+            <div>
+                <p class="customer-label">CUSTOMER DASHBOARD</p>
+                <h1>Welcome, {{ session.get('user_name') }}!</h1>
+                <p>Discover products, explore nearby shops and reserve your favourite items.</p>
+            </div>
+
+            <a href="{{ url_for('home') }}" class="customer-primary-btn">
+                Explore Products
+            </a>
+        </section>
+
+        <section class="customer-section">
+            <h2>Your Shopping</h2>
+            <p class="customer-section-description">
+                Manage your shopping activities from one place.
+            </p>
+
+            <div class="customer-card-container">
+
+                <div class="customer-card">
+                    <h3>Explore Products</h3>
+                    <p>Discover products available at nearby shops.</p>
+                    <a href="{{ url_for('home') }}">Browse Products →</a>
+                </div>
+
+                <div class="customer-card">
+                    <h3>My Reservations</h3>
+                    <p>View your product reservations.</p>
+                    <a href="{{ url_for('my_reservations') }}">View Reservations →</a>
+                </div>
+                                <div class="customer-card">
+                    <h3>My Bargaining Offers</h3>
+                    <p>View your price offers and shopkeeper counteroffers.</p>
+                    <a href="{{ url_for('customer_offers') }}">View My Offers →</a>
+                </div>
+
+                <div class="customer-card">
+                    <h3>Marketplace</h3>
+                    <p>Return to the ShopNear AI marketplace.</p>
+                    <a href="{{ url_for('home') }}">Visit Marketplace →</a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+</body>
+
+</html>

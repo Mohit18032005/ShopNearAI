@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Offers | ShopNear AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="shopkeeper-page">
+
+    <header class="shopkeeper-header">
+        <a href="{{ url_for('shopkeeper_dashboard') }}"
+           class="shopkeeper-logo">
+            ShopNear AI
+        </a>
+
+        <nav class="shopkeeper-nav">
+            <a href="{{ url_for('shopkeeper_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}"
+               class="shopkeeper-logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="shopkeeper-dashboard">
+
+        <section class="shopkeeper-welcome">
+            <div>
+                <p class="shopkeeper-label">CUSTOMER BARGAINING</p>
+                <h1>Incoming Offers</h1>
+                <p>Review price offers received from your customers.</p>
+            </div>
+        </section>
+
+        <section class="shopkeeper-section">
+
+            <h2>Customer Offers</h2>
+
+            {% if offers %}
+
+                <div class="shopkeeper-card-container">
+
+                    {% for offer in offers %}
+
+                        <div class="shopkeeper-card">
+
+                            <h3>{{ offer.product_name }}</h3>
+
+                            <p>
+                                Customer:
+                                {{ offer.customer_name }}
+                            </p>
+
+                            <p>
+                                Email:
+                                {{ offer.customer_email }}
+                            </p>
+
+                            <p>
+                                Listed Price:
+                                ₹{{ offer.listed_price }}
+                            </p>
+
+                            <h3>
+                                Customer Offer:
+                                ₹{{ offer.offered_price }}
+                            </h3>
+
+                            <p>
+                                Message:
+                                {{ offer.message or "No message provided" }}
+                            </p>
+
+                            <p>
+                                Status:
+                                <strong>{{ offer.status }}</strong>
+                            </p>
+
+                            <p>
+                                Submitted:
+                                {{ offer.created_at }}
+                            </p>
+                            {% if offer.status == "Pending" %}
+
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+
+        <form action="{{ url_for('update_bargaining_offer', offer_id=offer.id) }}"
+              method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="status" value="Accepted">
+
+            <button type="submit"
+                    class="shopkeeper-primary-btn"
+                    style="background: #16834a;">
+                Accept Offer
+            </button>
+
+        </form>
+
+        <form action="{{ url_for('update_bargaining_offer', offer_id=offer.id) }}"
+              method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="status" value="Rejected">
+
+            <button type="submit"
+                    class="shopkeeper-primary-btn"
+                    style="background: #c0392b;">
+                Reject Offer
+            </button>
+
+        </form>
+        <form action="{{ url_for('submit_counteroffer', offer_id=offer.id) }}"
+      method="POST"
+      style="margin-top: 15px;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input
+        type="number"
+        name="counter_price"
+        placeholder="Your counteroffer price (₹)"
+        min="0.01"
+        step="0.01"
+        required
+        style="width: 100%; padding: 10px; margin-bottom: 10px;"
+    >
+
+    <button type="submit"
+            class="shopkeeper-primary-btn">
+        Send Counteroffer
+    </button>
+
+</form>
+    </div>
+
+{% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="shopkeeper-card">
+                    <h3>No Offers Yet</h3>
+                    <p>
+                        Customer price offers will appear here.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+</html>

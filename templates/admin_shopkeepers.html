@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopkeeper Management | ShopNear AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="admin-page">
+
+    <div class="admin-layout">
+
+        <aside class="admin-sidebar">
+
+            <h2>ShopNear <span>AI</span></h2>
+
+            <p class="admin-label">ADMINISTRATION</p>
+
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('admin_customers') }}">Customers</a>
+            <a href="{{ url_for('admin_shopkeepers') }}" class="active">Shopkeepers</a>
+            <a href="{{ url_for('admin_dashboard') }}#shops">Shops</a>
+            <a href="{{ url_for('admin_dashboard') }}#products">Products</a>
+            <a href="{{ url_for('admin_dashboard') }}#reservations">Reservations</a>
+            <a href="{{ url_for('admin_dashboard') }}#categories">Categories</a>
+            <a href="{{ url_for('admin_dashboard') }}#analytics">Analytics</a>
+            <a href="{{ url_for('admin_dashboard') }}#settings">Settings</a>
+
+            <div class="admin-sidebar-bottom">
+                <a href="{{ url_for('home') }}">View Marketplace</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+
+        </aside>
+
+        <main class="admin-main">
+
+            <header class="admin-topbar">
+
+                <div>
+                    <h1>Shopkeeper Management</h1>
+                    <p>View and manage registered shopkeeper accounts.</p>
+                </div>
+
+                <div class="admin-profile">
+                    <span>Administrator</span>
+                    <strong>{{ session.get('user_name') }}</strong>
+                </div>
+
+            </header>
+
+            <section class="admin-welcome">
+                <h2>Registered Shopkeepers</h2>
+                <p>Manage all shopkeeper accounts on ShopNear AI.</p>
+            </section>
+
+            <section class="admin-stats">
+
+                <div class="admin-stat-card">
+                    <span>Total Shopkeepers</span>
+                    <h2>{{ total_shopkeepers }}</h2>
+                    <p>Registered shopkeeper accounts</p>
+                </div>
+
+            </section>
+
+            <section class="admin-management">
+
+                <h2>Shopkeeper Accounts</h2>
+                <p>List of all registered shopkeepers.</p>
+
+                <form method="GET"
+                      action="{{ url_for('admin_shopkeepers') }}"
+                      class="admin-search-form">
+
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search by name, username or email..."
+                        value="{{ search_query }}"
+                    >
+
+                    <button type="submit">Search</button>
+
+                    {% if search_query %}
+                        <a href="{{ url_for('admin_shopkeepers') }}">Clear</a>
+                    {% endif %}
+
+                </form>
+
+                <div class="admin-table-container">
+
+                    <table class="admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Registration Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for shopkeeper in shopkeepers %}
+
+                            <tr>
+                                <td>{{ shopkeeper['id'] }}</td>
+                                <td>{{ shopkeeper['name'] }}</td>
+                                <td>{{ shopkeeper['username'] or '-' }}</td>
+                                <td>{{ shopkeeper['email'] }}</td>
+                                <td>{{ shopkeeper['created_at'] }}</td>
+
+                                <td>
+                                    <form method="POST"
+                                          action="{{ url_for('delete_shopkeeper', shopkeeper_id=shopkeeper['id']) }}"
+                                          onsubmit="return confirm('Are you sure you want to delete this shopkeeper account?');">
+                                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit"
+                                                class="delete-btn">
+                                            Delete
+                                        </button>
+
+                                    </form>
+                                </td>
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="6">
+                                    No shopkeepers registered yet.
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- Pagination -->
+
+                <div class="admin-pagination">
+
+                    <a href="{{ url_for('admin_shopkeepers',
+                        page=page-1, search=search_query) }}"
+                       class="pagination-btn {% if page <= 1 %}disabled{% endif %}">
+                        Previous
+                    </a>
+
+                    <span class="pagination-info">
+                        Page {{ page }} of {{ total_pages }}
+                    </span>
+
+                    <a href="{{ url_for('admin_shopkeepers',
+                        page=page+1, search=search_query) }}"
+                       class="pagination-btn {% if page >= total_pages %}disabled{% endif %}">
+                        Next
+                    </a>
+
+                </div>
+
+            </section>
+
+            <footer class="admin-footer">
+                ShopNear AI Admin Panel
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

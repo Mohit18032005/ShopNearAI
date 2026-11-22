@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search Results | ShopNear AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <span class="logo-icon">S</span>
+                ShopNear<span>AI</span>
+            </a>
+
+            <a href="/" class="signup-btn">Back to Home</a>
+        </div>
+    </nav>
+
+    <section class="section">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-label">PRODUCT DISCOVERY</span>
+                <h2>
+    {% if selected_category %}
+    {{ selected_category }} Products
+{% elif query %}
+    Search Results
+{% else %}
+    All Products
+    {% endif %}
+{% if selected_category %}
+    <p>Showing products in the {{ selected_category }} category.</p>
+{% elif query %}
+    <p>Search results for "{{ query }}"</p>
+{% else %}
+    <p>Browse products available in local shops.</p>
+{% endif %}
+</h2>
+                
+
+<form action="{{ url_for('search') }}" method="GET" class="marketplace-filter-form">
+
+    <input
+        type="text"
+        name="q"
+        value="{{ query }}"
+        placeholder="Search products..."
+    >
+
+    <select name="category">
+        <option value="">All Categories</option>
+
+        {% for category in categories %}
+            <option value="{{ category }}"
+                {% if selected_category == category %}selected{% endif %}>
+                {{ category }}
+            </option>
+        {% endfor %}
+    </select>
+    <!-- Location Filter -->
+<select name="location">
+    <option value="">All Locations</option>
+
+    {% for location in locations %}
+        <option value="{{ location }}"
+            {% if selected_location == location %}selected{% endif %}>
+            {{ location }}
+        </option>
+    {% endfor %}
+</select>
+<!-- Availability Filter -->
+<label>
+    <input
+        type="checkbox"
+        name="in_stock"
+        value="1"
+        {% if in_stock_only == "1" %}checked{% endif %}
+    >
+    In Stock Only
+</label>
+    <!-- Minimum Price -->
+<input
+    type="number"
+    name="min_price"
+    placeholder="Minimum Price (₹)"
+    min="0"
+    step="0.01"
+    value="{{ min_price }}"
+>
+
+<!-- Maximum Price -->
+<input
+    type="number"
+    name="max_price"
+    placeholder="Maximum Price (₹)"
+    min="0"
+    step="0.01"
+    value="{{ max_price }}"
+>
+
+    <button type="submit">Apply Filter</button>
+
+</form>
+            </div>
+        </div>
+        {% if recommended_products and session.get('user_role') == 'customer' and not selected_category %}
+<section class="section">
+    <div class="section-heading">
+        <h2>Recommended for You ✨</h2>
+<p>Personalized picks based on your previous reservations and popular products.</p>
+        <p>Products selected based on your interests and popular choices.</p>
+    </div>
+
+    <div class="category-grid">
+        {% for product in recommended_products %}
+        <div class="category-card">
+
+            {% if product.image %}
+                <img
+                    src="{{ url_for('static', filename='images/' + product.image) }}"
+                    alt="{{ product.name }}"
+                    class="product-image"
+                >
+            {% else %}
+                <div class="product-image">
+                    Image not available
+                </div>
+            {% endif %}
+
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.category }}</p>
+            <p>Price: ₹{{ product.price }}</p>
+            <p>Shop: {{ product.shop }}</p>
+            <p>Location: {{ product.location }}</p>
+
+            {% if product.stock > 0 %}
+                <p>Available Stock: {{ product.stock }}</p>
+                <a href="{{ url_for('search', q=product.name) }}"
+                   class="signup-btn">
+                    View Product
+                </a>
+            {% else %}
+                <p>Out of Stock</p>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+        {% if results %}
+
+        <div class="category-grid">
+
+            {% for product in results %}
+
+            <div class="category-card">
+
+                {% if product.image %}
+    <img
+        src="{{ url_for('static', filename='images/' + product.image) }}"
+        alt="{{ product.name }}"
+        class="product-image"
+    >
+{% else %}
+    <div class="product-image">
+        Image not available
+    </div>
+{% endif %}
+
+                <h3>{{ product.name }}</h3>
+
+                <p>{{ product.category }}</p>
+
+                <h2>₹{{ product.price | int }}</h2>
+
+                <p>Shop: {{ product.shop }}</p>
+
+                <p>Location: {{ product.location }}</p>
+                
+
+                <p>Available stock: {{ product.stock }}</p>
+                {% if product.stock > 0 %}
+    <form action="{{ url_for('reserve_product', product_id=product.id) }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="signup-btn">Reserve Product</button>
+    </form>
+{% else %}
+    <button type="button" class="signup-btn" disabled
+            style="background-color: #999; cursor: not-allowed;">
+        Out of Stock
+    </button>
+{% endif %}
+{% if product.stock > 0 %}
+<form action="{{ url_for('submit_bargain', product_id=product.id) }}" method="POST"
+      style="margin-top: 12px;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <input
+        type="number"
+        name="offered_price"
+        placeholder="Your offer price (₹)"
+        min="0.01"
+        step="0.01"
+        max="{{ product.price - 0.01 }}"
+        required
+        style="width: 100%; padding: 10px; margin-bottom: 8px;"
+    >
+
+    <textarea
+        name="message"
+        placeholder="Message to the shopkeeper (optional)"
+        rows="2"
+        style="width: 100%; padding: 10px; margin-bottom: 8px;"
+    ></textarea>
+
+    <button type="submit" class="signup-btn">
+        Make an Offer
+    </button>
+</form>
+{% endif %}
+    <a href="https://www.google.com/maps/search/?api=1&query={% if product.shop_latitude is not none and product.shop_longitude is not none %}{{ product.shop_latitude }},{{ product.shop_longitude }}{% else %}{{ ((product.shop_address or product.location) ~ ', ' ~ product.location)|urlencode }}{% endif %}"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="signup-btn"
+   style="display: inline-block; text-decoration: none; text-align: center;">
+    View Shop on Map
+</a>
+{% if product.shop_latitude is not none and product.shop_longitude is not none %}
+<div style="margin-top: 15px;">
+    <iframe
+        width="100%"
+        height="220"
+        style="border: 0; border-radius: 10px;"
+        loading="lazy"
+        allowfullscreen
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q={{ product.shop_latitude }},{{ product.shop_longitude }}&output=embed">
+    </iframe>
+</div>
+<a href="https://www.google.com/maps/dir/?api=1&destination={{ product.shop_latitude }},{{ product.shop_longitude }}"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="signup-btn"
+   style="display: block; text-align: center; margin-top: 10px; text-decoration: none;">
+    Get Directions
+</a>
+{% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="category-card">
+            <h3>No products found</h3>
+            <p>Try searching for another product or category.</p>
+            <br>
+            <a href="/" class="signup-btn">Search Again</a>
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</body>
+</html>

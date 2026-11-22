@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings | ShopNear AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="admin-page">
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <h2>ShopNear <span>AI</span></h2>
+        <p class="admin-label">ADMINISTRATION</p>
+
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin_customers') }}">Customers</a>
+        <a href="{{ url_for('admin_shopkeepers') }}">Shopkeepers</a>
+        <a href="{{ url_for('admin_shops') }}">Shops</a>
+        <a href="{{ url_for('admin_products') }}">Products</a>
+        <a href="{{ url_for('admin_reservations') }}">Reservations</a>
+        <a href="{{ url_for('admin_categories') }}">Categories</a>
+        <a href="{{ url_for('admin_analytics') }}">Analytics</a>
+        <a href="{{ url_for('admin_settings') }}" class="active">Settings</a>
+
+        <div class="admin-sidebar-bottom">
+            <a href="{{ url_for('home') }}">View Marketplace</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+
+        <header class="admin-topbar">
+            <div>
+                <h1>Admin Settings</h1>
+                <p>Configure your ShopNear AI platform.</p>
+            </div>
+        </header>
+
+        <section class="admin-management admin-settings-section">
+
+            <div class="admin-banner">
+                <h2>Platform Settings</h2>
+                <p>Manage your platform information.</p>
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="admin-settings-card">
+
+    <h2>General Information</h2>
+    <p class="admin-settings-description">
+        Update the details of your marketplace.
+    </p>
+
+    <form method="POST" class="admin-settings-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-group">
+                    <label for="platform_name">Platform Name</label>
+                    <input
+                        type="text"
+                        id="platform_name"
+                        name="platform_name"
+                        value="{{ settings['platform_name'] }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="contact_email">Contact Email</label>
+                    <input
+                        type="email"
+                        id="contact_email"
+                        name="contact_email"
+                        value="{{ settings['contact_email'] or '' }}"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="support_phone">Support Phone</label>
+                    <input
+                        type="text"
+                        id="support_phone"
+                        name="support_phone"
+                        value="{{ settings['support_phone'] or '' }}"
+                    >
+                </div>
+
+                <button type="submit">Save Settings</button>
+
+            </form>
+
+</div>
+
+</section>
+
+        <footer class="admin-footer">
+            ShopNear AI Admin Panel
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopkeeper Dashboard | ShopNear AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="shopkeeper-page">
+
+    <header class="shopkeeper-header">
+
+        <a href="{{ url_for('home') }}" class="shopkeeper-logo">
+            ShopNear AI
+        </a>
+
+        <nav class="shopkeeper-nav">
+            <a href="{{ url_for('home') }}">Marketplace</a>
+            <a href="{{ url_for('logout') }}" class="shopkeeper-logout">
+                Logout
+            </a>
+        </nav>
+
+    </header>
+
+    <main class="shopkeeper-dashboard">
+
+        <section class="shopkeeper-welcome">
+
+            <div>
+                <p class="shopkeeper-label">SHOPKEEPER DASHBOARD</p>
+
+                <h1>Welcome, {{ session.get('user_name') }}!</h1>
+
+                <p>
+                    Manage your shop, organise your products and grow
+                    your business with ShopNear AI.
+                </p>
+            </div>
+
+            <a href="{{ url_for('home') }}" class="shopkeeper-primary-btn">
+                Visit Marketplace
+            </a>
+
+        </section>
+
+        <section class="shopkeeper-section">
+
+            <h2>Your Shop Management</h2>
+
+            <p class="shopkeeper-section-description">
+                Manage your business activities from one place.
+            </p>
+
+            <div class="shopkeeper-card-container">
+
+                <div class="shopkeeper-card">
+    <h3>Product Management</h3>
+    <p>
+        Manage the products available in your shop.
+    </p>
+    <a href="{{ url_for('add_product') }}"
+       class="shopkeeper-primary-btn">
+        Add Product
+    </a>
+</div>
+
+                
+<div class="shopkeeper-card">
+    <h3>Inventory Management</h3>
+
+    <p>
+        Keep track of your product stock and availability.
+    </p>
+
+    <a href="{{ url_for('my_products') }}"
+       class="shopkeeper-primary-btn">
+        View My Products
+    </a>
+</div>
+
+
+                <div class="shopkeeper-card">
+                    <h3>Shop Management</h3>
+                    <p>
+                        Manage your shop information and business details.
+                    </p>
+                    <span class="shopkeeper-coming-soon">
+                        <a href="{{ url_for('shop_management') }}"
+   class="shopkeeper-primary-btn">
+    Manage My Shop
+</a>
+                    
+                </div>
+                        </div>  <!-- End of Shop Management card -->
+
+        <!-- New Customer Bargaining Offers card -->
+        <div class="shopkeeper-card">
+            <h3>Customer Bargaining Offers</h3>
+
+            <p>
+                View customer price offers and manage your negotiations.
+            </p>
+
+            <a href="{{ url_for('shopkeeper_offers') }}"
+               class="shopkeeper-primary-btn">
+                View Customer Offers
+            </a>
+        </div>
+
+    </div>  <!-- End of shopkeeper-card-container -->
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

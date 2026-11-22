@@ -1,0 +1,148 @@
+res
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Confirmed | ShopNear AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .reservation-container {
+            max-width: 650px;
+            margin: 60px auto;
+            padding: 35px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+
+        .success-icon {
+            font-size: 55px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .reservation-container h1 {
+            text-align: center;
+            color: #16834a;
+        }
+
+        .success-message {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .reservation-info {
+            border-top: 1px solid #e5e7eb;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .reservation-info strong {
+            color: #334155;
+        }
+
+        .reservation-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .reservation-actions a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            padding: 13px;
+            border-radius: 8px;
+            background: #16834a;
+            color: white;
+            font-weight: bold;
+        }
+
+        .reservation-actions a:last-child {
+            background: #e8f5ed;
+            color: #16834a;
+        }
+
+        @media (max-width: 600px) {
+            .reservation-container {
+                margin: 25px 15px;
+                padding: 22px;
+            }
+
+            .reservation-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="reservation-container">
+
+        <div class="success-icon">✅</div>
+
+        <h1>Reservation Confirmed!</h1>
+
+        <p class="success-message">
+            Your product has been successfully reserved.
+        </p>
+
+        <div class="reservation-info">
+            <strong>Reservation ID</strong>
+            <span>#{{ reservation.id }}</span>
+        </div>
+
+        <div class="reservation-info">
+            <strong>Product</strong>
+            <span>{{ reservation.product }}</span>
+        </div>
+
+        <div class="reservation-info">
+            <strong>Price</strong>
+            <span>₹{{ reservation.price | int }}</span>
+        </div>
+
+        <div class="reservation-info">
+            <strong>Shop</strong>
+            <span>{{ reservation.shop }}</span>
+        </div>
+
+        <div class="reservation-info">
+            <strong>Location</strong>
+            <span>{{ reservation.location }}</span>
+        </div>
+
+        <div class="reservation-info">
+            <strong>Status</strong>
+            <span style="color: #16834a;">
+                {{ reservation.status }}
+            </span>
+        </div>
+
+        <div class="reservation-info">
+            <strong>Reservation Date</strong>
+            <span>{{ reservation.date }}</span>
+        </div>
+
+        <div class="reservation-actions">
+            <a href="{{ url_for('search', q=reservation.product) }}">
+                Back to Product
+            </a>
+
+            <a href="{{ url_for('home') }}">
+                Back to Home
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

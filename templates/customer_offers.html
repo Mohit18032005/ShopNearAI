@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bargaining Offers | ShopNear AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="customer-page">
+
+    <header class="customer-header">
+        <a href="{{ url_for('customer_dashboard') }}"
+           class="customer-logo">
+            ShopNear AI
+        </a>
+
+        <nav class="customer-nav">
+            <a href="{{ url_for('customer_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('my_reservations') }}">My Reservations</a>
+            <a href="{{ url_for('logout') }}" class="customer-logout">
+                Logout
+            </a>
+        </nav>
+    </header>
+
+    <main class="customer-dashboard">
+
+        <section class="customer-welcome">
+            <div>
+                <p class="customer-label">CUSTOMER BARGAINING</p>
+                <h1>My Bargaining Offers</h1>
+                <p>Track your offers and negotiate prices with shopkeepers.</p>
+            </div>
+        </section>
+
+        <section class="customer-section">
+
+            <h2>Your Offers</h2>
+
+            {% if offers %}
+
+                <div class="customer-card-container">
+
+                    {% for offer in offers %}
+
+                        <div class="customer-card">
+
+                            <h3>{{ offer.product_name }}</h3>
+
+                            <p>
+                                Shopkeeper:
+                                {{ offer.shopkeeper_name }}
+                            </p>
+
+                            <p>
+                                Listed Price:
+                                ₹{{ offer.listed_price }}
+                            </p>
+
+                            <p>
+                                Your Offer:
+                                ₹{{ offer.offered_price }}
+                            </p>
+
+                            {% if offer.counter_price %}
+                                <h3>
+                                    Shopkeeper Counteroffer:
+                                    ₹{{ offer.counter_price }}
+                                </h3>
+                            {% endif %}
+
+                            <p>
+                                Status:
+                                <strong>{{ offer.status }}</strong>
+                            </p>
+                                                        {% if offer.status == 'Countered' %}
+                                <form action="{{ url_for('respond_to_counteroffer', offer_id=offer.id) }}"
+                                      method="POST" style="margin-top: 12px;">
+                                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" name="response" value="Accepted"
+                                            class="signup-btn">
+                                        Accept Counteroffer
+                                    </button>
+
+                                    <button type="submit" name="response" value="Rejected"
+                                            class="signup-btn">
+                                        Reject Counteroffer
+                                    </button>
+
+                                </form>
+                            {% endif %}
+
+                            <p>
+                                Your Message:
+                                {{ offer.message or "No message provided" }}
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="customer-card">
+                    <h3>No Offers Yet</h3>
+                    <p>Your submitted price offers will appear here.</p>
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+</html>

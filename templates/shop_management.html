@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Management | ShopNear AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="shop-management-page">
+
+    <main class="shop-management-container">
+        {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+        <header class="shop-management-header">
+            <div>
+                <span class="shop-management-label">SHOPKEEPER PANEL</span>
+                <h1>Shop Management</h1>
+                <p>Manage your shop information and business details.</p>
+            </div>
+
+            <a href="{{ url_for('shopkeeper_dashboard') }}"
+               class="shop-management-back">
+                Back to Dashboard
+            </a>
+        </header>
+
+        <section class="shop-management-card">
+
+            <h2>{{ 'Update Your Shop' if shop else 'Register Your Shop' }}</h2>
+
+            <p class="shop-management-description">
+                Enter your shop details so customers can find your business.
+            </p>
+
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="shop-management-form-grid">
+
+                    <div class="shop-management-field">
+                        <label for="shop_name">Shop Name *</label>
+                        <input type="text"
+                               id="shop_name"
+                               name="shop_name"
+                               value="{{ shop['shop_name'] if shop else '' }}"
+                               placeholder="Enter your shop name"
+                               required>
+                    </div>
+
+                    <div class="shop-management-field">
+                        <label for="location">City / Area *</label>
+                        <input type="text"
+                               id="location"
+                               name="location"
+                               value="{{ shop['location'] if shop else '' }}"
+                               placeholder="Enter your city or area"
+                               required>
+                    </div>
+
+                    <div class="shop-management-field full-width">
+                        <label for="address">Full Address *</label>
+                        <input type="text"
+                               id="address"
+                               name="address"
+                               value="{{ shop['address'] if shop else '' }}"
+                               placeholder="Enter your complete shop address"
+                               required>
+                    </div>
+                                        <div class="shop-management-field">
+                        <label for="latitude">Latitude</label>
+                        <input type="number"
+                               id="latitude"
+                               name="latitude"
+                               step="any"
+                               min="-90"
+                               max="90"
+                               value="{{ shop['latitude'] if shop and shop['latitude'] is not none else '' }}"
+                               placeholder="Example: 22.6892">
+                    </div>
+
+                    <div class="shop-management-field">
+                        <label for="longitude">Longitude</label>
+                        <input type="number"
+                               id="longitude"
+                               name="longitude"
+                               step="any"
+                               min="-180"
+                               max="180"
+                               value="{{ shop['longitude'] if shop and shop['longitude'] is not none else '' }}"
+                               placeholder="Example: 88.3731">
+                    </div>
+
+                    <div class="shop-management-field full-width">
+                        <label for="description">Shop Description</label>
+                        <textarea id="description"
+                                  name="description"
+                                  rows="5"
+                                  placeholder="Tell customers about your shop">{{ shop['description'] if shop else '' }}</textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="shop-management-save">
+                    {{ 'Update Shop Details' if shop else 'Save Shop Details' }}
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

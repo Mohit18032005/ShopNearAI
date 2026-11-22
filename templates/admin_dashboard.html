@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | ShopNear AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="admin-page">
+
+    <div class="admin-layout">
+
+        <aside class="admin-sidebar">
+
+            <h2>ShopNear <span>AI</span></h2>
+
+            <p class="admin-label">ADMINISTRATION</p>
+
+            <a href="{{ url_for('admin_dashboard') }}" class="active">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('admin_customers') }}">Customers</a>
+<a href="{{ url_for('admin_shopkeepers') }}">Shopkeepers</a>
+<a href="{{ url_for('admin_shops') }}">Shops</a>
+<a href="{{ url_for('admin_products') }}">Products</a>
+<a href="{{ url_for('admin_reservations') }}">Reservations</a>
+
+<a href="{{ url_for('admin_categories') }}">Categories</a>
+<a href="{{ url_for('admin_analytics') }}">Analytics</a>
+<a href="{{ url_for('admin_settings') }}">Settings</a>
+
+            <div class="admin-sidebar-bottom">
+                <a href="{{ url_for('home') }}">View Marketplace</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+
+        </aside>
+
+
+        <main class="admin-main">
+
+            <header class="admin-topbar">
+                <div>
+                    <h1>Admin Dashboard</h1>
+                    <p>Manage your ShopNear AI platform.</p>
+                </div>
+
+                <div class="admin-profile">
+                    <span>Administrator</span>
+                    <strong>{{ session.get('user_name') }}</strong>
+                </div>
+            </header>
+
+
+            <section class="admin-welcome">
+                <h2>Welcome, {{ session.get('user_name') }}!</h2>
+                <p>
+                    Monitor and manage your marketplace from one place.
+                </p>
+            </section>
+
+
+            <section class="admin-stats">
+
+                <div class="admin-stat-card">
+                    <span>Total Customers</span>
+                    <h2>{{ total_customers }}</h2>
+                    <p>Registered customers</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <span>Total Shopkeepers</span>
+                    <h2>{{ total_shopkeepers }}</h2>
+                    <p>Registered shopkeepers</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <span>Total Products</span>
+                    <h2>{{ total_products }}</h2>
+                    <p>Marketplace products</p>
+                </div>
+
+                <div class="admin-stat-card">
+                    <span>Total Reservations</span>
+                    <h2>{{ total_reservations }}</h2>
+                    <p>Product reservations</p>
+                </div>
+
+            </section>
+
+
+            <section class="admin-management">
+
+                <h2>Platform Management</h2>
+                <p>Choose a section to manage your marketplace.</p>
+
+                <div class="admin-grid">
+
+                    <div class="admin-card" id="customers">
+                        <div class="admin-card-icon">👥</div>
+                        <h3>Customer Management</h3>
+                        <p>View and manage customer accounts.</p>
+                    </div>
+
+                    <div class="admin-card" id="shopkeepers">
+                        <div class="admin-card-icon">🏪</div>
+                        <h3>Shopkeeper Management</h3>
+                        <p>Manage registered shopkeepers.</p>
+                    </div>
+
+                    <a class="admin-card" id="shops" href="{{ url_for('admin_shops') }}">
+                        <div class="admin-card-icon">🏬</div>
+                        <h3>Shop Management</h3>
+                        <p>Manage marketplace shops.</p>
+                    </a>
+
+                    <a class="admin-card" id="products" href="{{ url_for('admin_products') }}">
+                        <div class="admin-card-icon">📦</div>
+                        <h3>Product Management</h3>
+                        <p>Monitor and manage products.</p>
+                    </a>
+
+                    <a href="{{ url_for('admin_reservations') }}"
+   class="admin-card"
+   id="reservations">
+
+    <div class="admin-card-icon">🛒</div>
+    <h3>Reservation Management</h3>
+    <p>View and manage reservations.</p>
+
+</a>
+
+                    <a href="{{ url_for('admin_categories') }}" class="admin-card" id="categories">
+    <div class="admin-card-icon">📂</div>
+    <h3>Categories Management</h3>
+    <p>Organize marketplace categories.</p>
+</a>
+
+                    
+<a href="{{ url_for('admin_analytics') }}" class="admin-card">
+    <div class="admin-card-icon">📊</div>
+    <h3>Platform Analytics</h3>
+    <p>Monitor marketplace performance.</p>
+</a>
+
+
+                    <a href="{{ url_for('admin_settings') }}" class="admin-card" id="settings">
+                        <div class="admin-card-icon">⚙️</div>
+                        <h3>Admin Settings</h3>
+                        <p>Configure platform settings.</p>
+                    </a>
+
+                </div>
+
+            </section>
+
+            <footer class="admin-footer">
+                ShopNear AI Admin Panel
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
