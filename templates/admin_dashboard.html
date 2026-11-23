@@ -25,7 +25,10 @@
             </a>
 
             <a href="{{ url_for('admin_customers') }}">Customers</a>
-<a href="{{ url_for('admin_shopkeepers') }}">Shopkeepers</a>
+<a href="{{ url_for('admin_shopkeepers') }}"
+   class="{% if request.endpoint == 'admin_shopkeepers' %}active{% endif %}">
+    Shopkeepers
+</a>
 <a href="{{ url_for('admin_shops') }}">Shops</a>
 <a href="{{ url_for('admin_products') }}">Products</a>
 <a href="{{ url_for('admin_reservations') }}">Reservations</a>
@@ -101,17 +104,17 @@
 
                 <div class="admin-grid">
 
-                    <div class="admin-card" id="customers">
-                        <div class="admin-card-icon">👥</div>
-                        <h3>Customer Management</h3>
-                        <p>View and manage customer accounts.</p>
-                    </div>
+                    <a class="admin-card" id="customers" href="{{ url_for('admin_customers') }}">
+    <div class="admin-card-icon">👥</div>
+    <h3>Customer Management</h3>
+    <p>View and manage customer accounts.</p>
+</a>
 
-                    <div class="admin-card" id="shopkeepers">
-                        <div class="admin-card-icon">🏪</div>
-                        <h3>Shopkeeper Management</h3>
-                        <p>Manage registered shopkeepers.</p>
-                    </div>
+                    <a class="admin-card" id="shopkeepers" href="{{ url_for('admin_shopkeepers') }}">
+    <div class="admin-card-icon">🏪</div>
+    <h3>Shopkeeper Management</h3>
+    <p>Manage registered shopkeepers.</p>
+</a>
 
                     <a class="admin-card" id="shops" href="{{ url_for('admin_shops') }}">
                         <div class="admin-card-icon">🏬</div>
